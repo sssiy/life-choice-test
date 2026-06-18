@@ -1,0 +1,831 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>你适合留在大城市，回老家，还是换一种生活方式？</title>
+  <meta name="description" content="24题测试，帮你判断更适合留在大城市、回老家，还是换一种生活方式，并生成专属选择报告。" />
+  <style>
+    :root {
+      --bg: #f8f5ef;
+      --paper: #fffdf8;
+      --ink: #1f2a32;
+      --muted: #6e7a82;
+      --line: #ddd3c4;
+      --accent: #2f6f68;
+      --accent-2: #b66538;
+      --soft: #edf3ef;
+      --warn: #fff0e7;
+      --shadow: 0 18px 40px rgba(41, 35, 28, .08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif;
+    }
+
+    button {
+      color: inherit;
+      font: inherit;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .shell {
+      width: min(100%, 480px);
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 28px 20px 34px;
+      background:
+        linear-gradient(rgba(47,111,104,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(47,111,104,.045) 1px, transparent 1px),
+        var(--bg);
+      background-size: 24px 24px;
+    }
+
+    .topline {
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3, p { margin: 0; }
+    h1, h2, h3 { letter-spacing: 0; }
+
+    .hero-title {
+      margin-top: 22px;
+      font-size: 25px;
+      line-height: 1.2;
+      text-align: center;
+    }
+
+    .hero-title .keep {
+      white-space: nowrap;
+    }
+
+    .subtitle {
+      max-width: 410px;
+      margin: 18px auto 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.75;
+      text-align: center;
+    }
+
+    .subtitle span {
+      display: block;
+    }
+
+    .divider {
+      width: 64px;
+      height: 1px;
+      margin: 28px auto;
+      background: var(--line);
+    }
+
+    .panel, .report-card, .option {
+      background: rgba(255,253,248,.9);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .panel {
+      margin-top: 28px;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .panel p {
+      color: rgba(31,42,50,.82);
+      font-size: 14px;
+      line-height: 1.85;
+    }
+
+    .panel p + p { margin-top: 12px; }
+
+    .chips {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      padding: 10px;
+      background: rgba(255,255,255,.45);
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .primary-btn, .ghost-btn {
+      width: 100%;
+      min-height: 48px;
+      border-radius: 4px;
+      border: 1px solid var(--ink);
+      cursor: pointer;
+    }
+
+    .primary-btn {
+      background: var(--ink);
+      color: #fffdf8;
+      font-weight: 800;
+    }
+
+    .ghost-btn {
+      background: transparent;
+      color: var(--ink);
+    }
+
+    .fineprint {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+      text-align: center;
+    }
+
+    .progress {
+      height: 6px;
+      background: #e7ded1;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .progress span {
+      display: block;
+      height: 100%;
+      background: var(--accent);
+      transition: width .25s ease;
+    }
+
+    .quiz-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .module {
+      margin-top: 22px;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .question {
+      margin-top: 10px;
+      font-size: 22px;
+      line-height: 1.45;
+    }
+
+    .options {
+      display: grid;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .option {
+      width: 100%;
+      min-height: 68px;
+      padding: 16px;
+      border-radius: 7px;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .option strong {
+      display: inline-flex;
+      width: 24px;
+      height: 24px;
+      align-items: center;
+      justify-content: center;
+      margin-right: 8px;
+      border: 1px solid var(--line);
+      color: var(--accent);
+      font-size: 12px;
+      vertical-align: top;
+    }
+
+    .option span {
+      display: inline-block;
+      width: calc(100% - 36px);
+      color: rgba(31,42,50,.88);
+      font-size: 15px;
+      line-height: 1.55;
+      vertical-align: top;
+    }
+
+    .option:active { transform: translateY(1px); }
+
+    .nav-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .loader {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .spinner {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 28px;
+      border: 2px solid var(--line);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading-line {
+      min-height: 54px;
+      color: var(--accent);
+      font-weight: 800;
+      line-height: 1.7;
+      text-align: center;
+    }
+
+    .loading-bars {
+      display: grid;
+      gap: 8px;
+      margin-top: 26px;
+    }
+
+    .loading-bars div {
+      height: 5px;
+      background: #e7ded1;
+      overflow: hidden;
+    }
+
+    .loading-bars span {
+      display: block;
+      width: 0;
+      height: 100%;
+      background: var(--accent);
+      transition: width .3s ease;
+    }
+
+    .result-label {
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .result-title {
+      margin-top: 8px;
+      font-size: 30px;
+      line-height: 1.2;
+    }
+
+    .result-subtitle {
+      margin-top: 12px;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .indices {
+      display: grid;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .index {
+      padding: 14px;
+      border: 1px solid var(--line);
+      background: var(--paper);
+    }
+
+    .index b {
+      display: block;
+      color: var(--accent);
+      font-size: 24px;
+      line-height: 1.2;
+    }
+
+    .index span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .report-card {
+      margin-top: 16px;
+      padding: 18px;
+      border-radius: 8px;
+    }
+
+    .report-card h3 {
+      margin-bottom: 10px;
+      font-size: 17px;
+    }
+
+    .report-card p, .report-card li {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .report-card ul {
+      margin: 8px 0 0;
+      padding-left: 18px;
+    }
+
+    .compare {
+      display: grid;
+      gap: 12px;
+    }
+
+    .compare-item {
+      padding: 14px;
+      border: 1px solid var(--line);
+      background: rgba(237,243,239,.45);
+    }
+
+    .compare-item b {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--ink);
+    }
+
+    .share-box {
+      margin-top: 18px;
+      padding: 18px;
+      border: 1px solid var(--accent);
+      background: var(--soft);
+    }
+
+    .share-box b {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--accent);
+    }
+
+    .source {
+      word-break: break-word;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    @media (min-width: 760px) {
+      body { background: #ece6dc; }
+      .shell {
+        min-height: calc(100vh - 48px);
+        margin-top: 24px;
+        margin-bottom: 24px;
+        border: 1px solid var(--line);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main id="app"></main>
+  <script>
+    const disclaimer = "本测试仅用于个人探索和决策参考，不构成心理诊断、职业规划、财务建议、医疗建议或法律建议。";
+
+    const questions = [
+      { module: "当前城市关系", text: "想到未来三年继续生活在现在的城市，你第一反应更接近：", options: [
+        { key: "A", text: "虽然累，但这里还有我想争取的机会", type: "A" },
+        { key: "B", text: "一想到房租、通勤和压力就想回到熟悉的地方", type: "B" },
+        { key: "C", text: "我不想被一个城市绑定，想换一种更灵活的活法", type: "C" },
+        { key: "D", text: "我也说不清，只是最近很想逃离", type: "D" }
+      ]},
+      { module: "当前城市关系", text: "你最常羡慕哪一种人？", options: [
+        { key: "A", text: "在大城市熬出了专业、资源和选择权的人", type: "A" },
+        { key: "B", text: "回到家乡后过得安稳、有房、有熟人照应的人", type: "B" },
+        { key: "C", text: "能远程工作、四处短住、生活成本可控的人", type: "C" },
+        { key: "D", text: "看起来不焦虑、不被比较困住的人", type: "D" }
+      ]},
+      { module: "当前城市关系", text: "现在这座城市最消耗你的地方是：", options: [
+        { key: "A", text: "节奏太快，但我还能从中看到成长", type: "A" },
+        { key: "B", text: "生活成本太高，安全感一直上不来", type: "B" },
+        { key: "C", text: "规则太固定，我想要更自由的安排", type: "C" },
+        { key: "D", text: "别人都在往前跑，我总觉得自己落后", type: "D" }
+      ]},
+      { module: "当前城市关系", text: "如果不用考虑别人眼光，你最想先改变的是：", options: [
+        { key: "A", text: "换一份更能积累能力和资源的工作", type: "A" },
+        { key: "B", text: "搬到离家人和熟人更近的地方", type: "B" },
+        { key: "C", text: "减少固定开销和通勤，重组生活方式", type: "C" },
+        { key: "D", text: "先停下来，不想再被各种信息推着跑", type: "D" }
+      ]},
+      { module: "当前城市关系", text: "你对“留下来”的真实感受是：", options: [
+        { key: "A", text: "留下有压力，但还有值得打磨的东西", type: "A" },
+        { key: "B", text: "留下像是在用健康换机会", type: "B" },
+        { key: "C", text: "留下或离开都不是重点，我想换结构", type: "C" },
+        { key: "D", text: "我怕留下后证明自己选错了", type: "D" }
+      ]},
+      { module: "当前城市关系", text: "你对“回老家”的真实感受是：", options: [
+        { key: "A", text: "可以想象，但现在还不想放掉大城市资源", type: "A" },
+        { key: "B", text: "那会让我重新有生活的底气", type: "B" },
+        { key: "C", text: "老家也不是终点，我想有更多中间选项", type: "C" },
+        { key: "D", text: "我怕回去只是短暂轻松，问题还在", type: "D" }
+      ]},
+      { module: "资源和能量状态", text: "过去半年，你的身体和情绪状态更像：", options: [
+        { key: "A", text: "累，但还可以通过调整恢复", type: "A" },
+        { key: "B", text: "长期透支，休息几天也缓不过来", type: "B" },
+        { key: "C", text: "不是单纯累，是不想再按现在的模式活", type: "C" },
+        { key: "D", text: "信息越刷越焦虑，越比较越没力气", type: "D" }
+      ]},
+      { module: "资源和能量状态", text: "如果下个月收入暂时不变，你最想先把钱花在：", options: [
+        { key: "A", text: "学习、职业资源或能提升议价权的事", type: "A" },
+        { key: "B", text: "降低房租、回家、修复生活安全感", type: "B" },
+        { key: "C", text: "尝试一段低成本生活或副业样本", type: "C" },
+        { key: "D", text: "减少消费和冲动决定，先把现金流稳住", type: "D" }
+      ]},
+      { module: "资源和能量状态", text: "你现在最缺的资源是：", options: [
+        { key: "A", text: "更好的平台、导师、项目和人脉", type: "A" },
+        { key: "B", text: "可依靠的人、低成本生活和稳定感", type: "B" },
+        { key: "C", text: "时间自由、地点自由和试错空间", type: "C" },
+        { key: "D", text: "清醒判断力和不被比较影响的心态", type: "D" }
+      ]},
+      { module: "资源和能量状态", text: "面对每月固定开销，你更常出现的念头是：", options: [
+        { key: "A", text: "压力不小，但我希望以后赚回选择权", type: "A" },
+        { key: "B", text: "太不划算了，我想要更低的生活底盘", type: "B" },
+        { key: "C", text: "我想重新设计收入和支出，不想只有工资一条路", type: "C" },
+        { key: "D", text: "越算越焦虑，越焦虑越不敢决定", type: "D" }
+      ]},
+      { module: "资源和能量状态", text: "如果给你一个月完全自由时间，你最可能：", options: [
+        { key: "A", text: "梳理职业路径，争取更好的机会", type: "A" },
+        { key: "B", text: "回家住一阵，看看自己能不能恢复", type: "B" },
+        { key: "C", text: "去低成本城市短住，测试新的生活节奏", type: "C" },
+        { key: "D", text: "先睡觉、停刷、恢复基本生活秩序", type: "D" }
+      ]},
+      { module: "职业机会判断", text: "你怎么看现在的职业机会？", options: [
+        { key: "A", text: "还没到放弃的时候，我需要升级打法", type: "A" },
+        { key: "B", text: "机会和成本不成比例，我想换个生活底盘", type: "B" },
+        { key: "C", text: "我想把能力拆出来，放到别的场景里", type: "C" },
+        { key: "D", text: "我分不清机会和焦虑，容易被风口影响", type: "D" }
+      ]},
+      { module: "职业机会判断", text: "如果朋友劝你“年轻人还是要留在大城市”，你会：", options: [
+        { key: "A", text: "部分认同，关键是要留下得更聪明", type: "A" },
+        { key: "B", text: "不太认同，每个人的承受力和资源不同", type: "B" },
+        { key: "C", text: "我不想按别人给的标准路线生活", type: "C" },
+        { key: "D", text: "听完更焦虑，怕自己怎么选都错", type: "D" }
+      ]},
+      { module: "职业机会判断", text: "你最害怕的职业后果是：", options: [
+        { key: "A", text: "太早离开，错过后面的职业复利", type: "A" },
+        { key: "B", text: "继续硬撑，最后身心和存款都被耗空", type: "B" },
+        { key: "C", text: "一直困在单一身份里，没有第二曲线", type: "C" },
+        { key: "D", text: "被别人成功刺激，做出不适合自己的决定", type: "D" }
+      ]},
+      { module: "职业机会判断", text: "面对副业、远程、自由职业这些选择，你更像：", options: [
+        { key: "A", text: "可以作为补充，但主线还要深耕", type: "A" },
+        { key: "B", text: "如果能支撑回家生活，我愿意认真考虑", type: "B" },
+        { key: "C", text: "这正是我想探索的新生活结构", type: "C" },
+        { key: "D", text: "很心动，但也怕只是被内容种草", type: "D" }
+      ]},
+      { module: "职业机会判断", text: "如果未来五年回头看今天，你最怕后悔的是：", options: [
+        { key: "A", text: "没有再坚持一下，把积累做厚", type: "A" },
+        { key: "B", text: "没有早点回到更能承载生活的地方", type: "B" },
+        { key: "C", text: "没有早点尝试不同的生活组合", type: "C" },
+        { key: "D", text: "在最焦虑的时候做了最大决定", type: "D" }
+      ]},
+      { module: "家庭、归属和边界", text: "你和家乡/家人的关系更接近：", options: [
+        { key: "A", text: "有牵挂，但我仍想先经营自己的职业主线", type: "A" },
+        { key: "B", text: "那里有我重要的支持系统和安全感", type: "B" },
+        { key: "C", text: "我想靠近支持，但不想回到旧生活模式", type: "C" },
+        { key: "D", text: "想靠近又害怕被期待和评价绑住", type: "D" }
+      ]},
+      { module: "家庭、归属和边界", text: "当父母或亲戚问你“以后怎么打算”，你内心更像：", options: [
+        { key: "A", text: "我想用更清晰的职业进展回应他们", type: "A" },
+        { key: "B", text: "我希望他们理解我想回去重建生活", type: "B" },
+        { key: "C", text: "我不想被他们定义什么才算稳定", type: "C" },
+        { key: "D", text: "我会被问得很乱，更不知道怎么选", type: "D" }
+      ]},
+      { module: "家庭、归属和边界", text: "你现在最想要的关系状态是：", options: [
+        { key: "A", text: "有同频的人，一起在城市里往前走", type: "A" },
+        { key: "B", text: "离亲近的人更近，日常有人照应", type: "B" },
+        { key: "C", text: "关系有边界，我能自由安排自己的生活", type: "C" },
+        { key: "D", text: "先不被催促、不被比较，让我喘口气", type: "D" }
+      ]},
+      { module: "家庭、归属和边界", text: "如果回到熟悉的城市，你最需要提前确认的是：", options: [
+        { key: "A", text: "是否还有足够职业成长空间", type: "A" },
+        { key: "B", text: "收入、住房、家人边界能否稳定", type: "B" },
+        { key: "C", text: "能否保留自由和新的生活实验", type: "C" },
+        { key: "D", text: "自己是不是只是在逃避当下情绪", type: "D" }
+      ]},
+      { module: "未来身份和生活节奏", text: "你理想中的三年后更像：", options: [
+        { key: "A", text: "在一个高机会环境里，有更强专业壁垒", type: "A" },
+        { key: "B", text: "生活更稳，成本更低，关系更近", type: "B" },
+        { key: "C", text: "工作和生活更自由，不被地点完全绑定", type: "C" },
+        { key: "D", text: "不再总和别人比较，能踏实过自己的节奏", type: "D" }
+      ]},
+      { module: "未来身份和生活节奏", text: "下面哪句话最容易击中你？", options: [
+        { key: "A", text: "不是大城市不适合我，是我不能再低质量硬熬", type: "A" },
+        { key: "B", text: "回去不是认输，是把生活重新放到可承受范围内", type: "B" },
+        { key: "C", text: "我不想在标准答案里过完这一生", type: "C" },
+        { key: "D", text: "我最需要的不是答案，是先恢复清醒", type: "D" }
+      ]},
+      { module: "未来身份和生活节奏", text: "如果只能先做一个小实验，你会选：", options: [
+        { key: "A", text: "优化当前城市的工作、住处和社交支持", type: "A" },
+        { key: "B", text: "回老家或熟悉城市住两周，测试真实感受", type: "B" },
+        { key: "C", text: "尝试远程、副业、短住或低成本生活样本", type: "C" },
+        { key: "D", text: "停掉高刺激信息，记录30天真实状态", type: "D" }
+      ]},
+      { module: "未来身份和生活节奏", text: "做完这个测试，你最希望得到的答案是：", options: [
+        { key: "A", text: "我是不是还值得留在大城市继续打磨", type: "A" },
+        { key: "B", text: "我是不是该认真考虑回家乡重建生活", type: "B" },
+        { key: "C", text: "我是不是可以不按二选一来生活", type: "C" },
+        { key: "D", text: "我现在的决定是不是被焦虑影响了", type: "D" }
+      ]}
+    ];
+
+    const results = {
+      A: {
+        typeName: "大城深耕型",
+        subtitle: "你未必不适合大城市，你更需要停止低质量硬熬。",
+        indices: [
+          ["机会承接度", 88],
+          ["资源复利潜力", 82],
+          ["生活重组必要性", 76]
+        ],
+        escape: "你想逃离的可能不是大城市本身，而是高房租、长通勤、孤独感和无效努力叠在一起的生活结构。",
+        toward: "你真正想靠近的是更高质量的机会、更清晰的职业主线，以及在城市里也能被支持的生活。",
+        diagnosis: "你的答案显示，当前环境仍然有可利用的机会和成长空间。问题不在于一定要离开，而在于你不能继续用透支身体、压缩生活、孤立无援的方式留下。对你来说，成熟的选择不是“再忍忍”，而是把留下变成一套有策略的经营。",
+        misread: "最容易把短期疲惫误判成城市错位。疲惫是真的，但它未必说明你该离开，它更可能提醒你需要重组工作、居住、社交和金钱边界。",
+        compare: [
+          ["留大城市", "收益是机会密度、职业复利和资源连接；代价是成本高、节奏快，需要更强的生活经营能力。"],
+          ["回老家", "短期会降低压力，但可能中断正在形成的职业积累。除非你已经验证好收入和成长路径，否则不建议情绪化撤退。"],
+          ["换生活方式", "适合作为辅助策略，例如减少通勤、换区居住、发展副业、建立支持系统，而不是立刻推翻主线。"]
+        ],
+        plan30: ["列出当前城市里最消耗你的三件事，只改一个最关键的。", "约见两位比你早三年走过这条路的人，确认这条路是否还有复利。", "做一版真实月预算，把“留下”的底线成本算清楚。"],
+        plan90: "用 90 天重新设计大城市生活：换掉一个消耗源，建立一个支持源，投入一个能提升议价权的项目。90 天后再判断要不要离开。",
+        share: "我是大城深耕型：我不是一定要逃离大城市，而是要停止低质量硬熬。"
+      },
+      B: {
+        typeName: "家乡重建型",
+        subtitle: "回到更熟悉的地方，可能不是退路，而是重新建立稳定感。",
+        indices: [
+          ["支持系统需求", 91],
+          ["成本敏感度", 86],
+          ["重建可行性", 78]
+        ],
+        escape: "你想逃离的是长期超出承受力的生活成本、情绪孤立，以及没有人托底的漂泊感。",
+        toward: "你真正想靠近的是稳定、熟悉、低成本、有人照应，以及一种不用每天证明自己的生活。",
+        diagnosis: "你的答案显示，当前生活的消耗已经明显影响安全感。你并不是不够努力，而是可能一直在用过高成本维持一种并不适合当前阶段的生活。回到家乡、回省会、回熟悉城市，或靠近重要关系，都可能成为恢复资源的策略。",
+        misread: "最容易把家乡想象成纯粹的避风港。熟悉能带来支持，也可能带来催促、评价、人情压力和职业天花板。回去前要验证，不要只凭想象。",
+        compare: [
+          ["留大城市", "收益是机会密度；代价是继续消耗存款、身体和安全感。除非你能大幅降低成本，否则不宜硬扛。"],
+          ["回老家", "收益是生活底盘更稳、关系支持更近；代价是职业机会和个人边界需要重新谈判。"],
+          ["换生活方式", "可以作为过渡，例如先回家短住、远程办公、回省会或低成本城市，而不是一步到位回到旧生活。"]
+        ],
+        plan30: ["回家或去目标城市短住 7-14 天，不把短途轻松误认为长期适合。", "列出当地三类真实收入来源，而不是只看生活成本。", "和家人明确边界：住哪里、花多少钱、是否接受催婚/催稳定。"],
+        plan90: "做 90 天回流验证：收入样本、居住方案、社交支持、家庭边界四项至少验证三项，再决定是否长期迁移。",
+        share: "我是家乡重建型：我需要的不是逃避，而是把生活重新放回可承受范围。"
+      },
+      C: {
+        typeName: "生活方式重组型",
+        subtitle: "你的答案可能不在大城市或老家，而在第三种生活结构。",
+        indices: [
+          ["自由节奏需求", 93],
+          ["能力迁移潜力", 84],
+          ["实验准备度", 81]
+        ],
+        escape: "你想逃离的是单一路径、固定身份和被地点绑定的生活。你不想只在“留下”和“回去”里选一个标准答案。",
+        toward: "你真正想靠近的是更灵活的收入结构、更低的生活成本、更可控的节奏，以及能保留自我的生活方式。",
+        diagnosis: "你的答案显示，你对传统二选一并不满意。你可能适合低成本城市、远程工作、阶段性迁移、副业组合、自由职业探索，或更小半径的生活。你的关键词不是逃离，而是重组。",
+        misread: "最容易把“想要自由”停留在收藏攻略和幻想里。生活方式重组必须落到真实实验：收入、时间、地点、关系和成本都要被验证。",
+        compare: [
+          ["留大城市", "可以保留资源入口，但需要降低固定成本和地点依赖，否则自由感会继续被压缩。"],
+          ["回老家", "能降低成本，但如果回到旧期待里，你可能很快再次想逃。"],
+          ["换生活方式", "收益是自由度和自我匹配度更高；代价是需要更强的自律、现金流管理和不确定性承受力。"]
+        ],
+        plan30: ["选择一个最小实验：远程一周、短住一城、做一个副业样本，或减少通勤。", "记录每天能量、花费、效率和孤独感，不只记录心情。", "把理想生活拆成三个硬指标：月成本、收入来源、关系支持。"],
+        plan90: "用 90 天做一个轻量迁移或生活结构实验。目标不是立刻辞职，而是证明新结构能否持续。",
+        share: "我是生活方式重组型：我不需要标准答案，我需要把生活重新排列。"
+      },
+      D: {
+        typeName: "焦虑误判型",
+        subtitle: "你现在最需要的可能不是换地方，而是先恢复判断力。",
+        indices: [
+          ["比较压力", 94],
+          ["情绪耗竭度", 89],
+          ["决策成熟度", 42]
+        ],
+        escape: "你想逃离的可能不是某个城市，而是信息过载、同龄人比较、短期挫败和长期不确定感。",
+        toward: "你真正想靠近的是清醒、秩序、可控感，以及一种不被别人进度追着跑的生活。",
+        diagnosis: "你的答案显示，离开的冲动可能被疲惫和比较放大了。你当然可以重新选择，但不适合在情绪峰值做大决定。现在最重要的不是马上选大城市或老家，而是先把判断力从焦虑里拿回来。",
+        misread: "最容易用地点变化解决心理耗竭。换城市能改变环境，但如果睡眠、金钱、信息输入和自我评价没有修复，焦虑可能会跟着你去下一个地方。",
+        compare: [
+          ["留大城市", "如果不先修复能量，继续留下会像硬扛；但贸然离开也未必解决根本问题。"],
+          ["回老家", "短期会放松，但也可能引发新的比较和家庭压力。先试住，不要冲动搬迁。"],
+          ["换生活方式", "很有吸引力，但现在需要先做小验证，避免被内容种草和焦虑驱动。"]
+        ],
+        plan30: ["停掉最刺激你比较焦虑的三个信息源。", "连续 14 天记录睡眠、支出、工作消耗和真实想法。", "只做一个可逆小决定，不做辞职、搬家、分手等不可逆连锁决定。"],
+        plan90: "先用 30 天恢复，再用 60 天收集证据。等情绪曲线稳定后，再讨论大城市、老家或新生活方式。",
+        share: "我是焦虑误判型：我现在不急着推翻生活，我要先恢复清醒。"
+      }
+    };
+
+    const mixedNotes = {
+      AB: "你既看重大城市机会，也需要更强的生活托底。建议先降低城市成本，再评估是否回流。",
+      AC: "你有深耕潜力，也有重组生活的需求。建议保留职业主线，同时测试更自由的生活结构。",
+      AD: "你可能仍适合留下，但近期焦虑会干扰判断。先恢复状态，再做城市选择。",
+      BA: "你需要稳定和支持，但也担心错过机会。可以优先考虑省会、强二线或靠近家的机会型城市。",
+      BC: "你需要低成本和支持系统，也不想回到旧模式。适合探索回流后的新生活结构。",
+      BD: "你想回家，但部分冲动来自耗竭。建议先短住验证，不要在崩溃期一次性搬回。",
+      CA: "你想重组生活，但大城市资源仍有价值。适合做混合策略：主线留住，生活降耗。",
+      CB: "你想要第三条路，也需要熟悉支持。可以优先测试低成本城市、家乡附近城市或远程过渡。",
+      CD: "你想换活法，但现在也受焦虑影响。先做小实验，避免把幻想当成方案。",
+      DA: "焦虑较强，但大城市机会仍吸引你。先修复节奏，再决定是否继续深耕。",
+      DB: "焦虑较强，也很需要支持系统。先回家短住恢复，再判断是否长期回流。",
+      DC: "焦虑较强，也渴望自由。先减少信息刺激，再做一个可逆的生活方式实验。"
+    };
+
+    const loadingLines = [
+      "正在识别你的城市适配度……",
+      "正在评估你的资源消耗状态……",
+      "正在拆解你的家庭与支持系统……",
+      "正在生成生活方式选择报告……",
+      "分析完成。"
+    ];
+
+    let state = { screen: "landing", index: 0, answers: [], loadingIndex: 0 };
+    const app = document.getElementById("app");
+
+    function shell(content) {
+      app.innerHTML = `<section class="shell">${content}</section>`;
+    }
+
+    function renderLanding() {
+      state.screen = "landing";
+      shell(`
+        <div class="topline">Life Choice Navigator</div>
+        <h1 class="hero-title"><span class="keep">你适合留在大城市，回老家，</span><br><span class="keep">还是换一种生活方式？</span></h1>
+        <p class="subtitle"><span>不是所有想离开都是逃避</span><span>也不是所有坚持都值得硬扛</span><span>24 道题，帮你看清下一阶段</span><span>更适合自己的生活选择</span></p>
+        <div class="divider"></div>
+        <div class="panel">
+          <p>你有没有过这种感觉：现在的生活还能继续，但每天都在消耗。想离开，又怕错过机会；想回家，又怕被说成退路；想换一种活法，又不知道是不是不现实。</p>
+          <p>这个测试会从自主感、胜任感、关系归属、资源消耗、比较压力和生活实验能力六个维度，帮你判断：你更适合留在大城市、回老家重建，还是换一种生活方式。</p>
+        </div>
+        <div class="chips">
+          <div class="chip">24题</div>
+          <div class="chip">6个心理维度</div>
+          <div class="chip">城市/家乡/生活方式</div>
+          <div class="chip">生成专属报告</div>
+        </div>
+        <div style="margin-top:26px">
+          <button class="primary-btn" id="start">开始测试</button>
+        </div>
+        <p class="fineprint">${disclaimer}</p>
+      `);
+      document.getElementById("start").addEventListener("click", () => {
+        state = { screen: "quiz", index: 0, answers: [], loadingIndex: 0 };
+        renderQuiz();
+      });
+    }
+
+    function renderQuiz() {
+      const q = questions[state.index];
+      const progress = Math.round((state.index / questions.length) * 100);
+      shell(`
+        <div class="progress"><span style="width:${progress}%"></span></div>
+        <div class="quiz-head">
+          <span>第 ${state.index + 1} / ${questions.length} 题</span>
+          <span>${Math.max(1, Math.ceil((questions.length - state.index) / 5))} 分钟内完成</span>
+        </div>
+        <div class="module">${q.module}</div>
+        <h2 class="question">${q.text}</h2>
+        <div class="options">
+          ${q.options.map((o, i) => `<button class="option" data-choice="${i}"><strong>${o.key}</strong><span>${o.text}</span></button>`).join("")}
+        </div>
+        <div class="nav-row">
+          <button class="ghost-btn" id="back">${state.index === 0 ? "返回首页" : "上一题"}</button>
+          <button class="ghost-btn" id="restart">重新开始</button>
+        </div>
+        <p class="fineprint">选择后会自动进入下一题。没有标准答案，选择最接近你真实感受的一项。</p>
+      `);
+
+      document.querySelectorAll(".option").forEach(button => {
+        button.addEventListener("click", () => {
+          const choice = q.options[Number(button.dataset.choice)];
+          state.answers[state.index] = choice;
+          if (state.index < questions.length - 1) {
+            state.index += 1;
+            renderQuiz();
+          } else {
+            renderLoading();
+          }
+        });
+      });
+
+      document.getElementById("back").addEventListener("click", () => {
+        if (state.index === 0) renderLanding();
+        else {
+          state.index -= 1;
+          renderQuiz();
+        }
+      });
+
+      document.getElementById("restart").addEventListener("click", renderLanding);
+    }
+
+    function renderLoading() {
+      state.screen = "loading";
+      state.loadingIndex = 0;
+      shell(`
+        <div class="loader">
+          <div class="spinner"></div>
+          <p class="loading-line" id="loadingText">${loadingLines[0]}</p>
+          <div class="loading-bars">
+            ${loadingLines.map((_, i) => `<div><span id="bar${i}"></span></div>`).join("")}
+          </div>
+        </div>
+      `);
+      const timer = setInterval(() => {
+        const bar = document.getElementById(`bar${state.loadingIndex}`);
+        if (bar) bar.style.width = "100%";
+        state.loadingIndex += 1;
+        if (state.loadingIndex >= loadingLines.length) {
+          clearInterval(timer);
+          setTimeout(renderResult, 550);
+        } else {
+          document.getElementById("loadingText").textContent = loadingLines[state.loadingIndex];
+        }
+      }, 650);
+    }
+
+    function scoreAnswers() {
+      const counts = { A: 0, B: 0, C: 0, D: 0 };
+      state.answers.forEach(answer => {
+        if (answer && counts[answer.type] !== undefined) counts[answer.type] += 1;
+      });
+      const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+      return {
+        primary: sorted[0][0],
+        secondary: sorted[0][1] - sorted[1][1] <= 2 && sorted[1][1] > 0 ? sorted[1][0] : null,
+        counts
+      };
+    }
+
+    function renderResult() {
+      const score = scoreAnswers();
+      const result = results[score.primary];
+      const mixedKey = score.secondary ? `${score.primary}${score.secondary}` : "";
+      const mixedNote = score.secondary ? mixedNotes[mixedKey] : "";
+      shell(`
+        <div class="result-label">你的生活选择倾向</div>
+        <h1 class="result-title">${result.typeName}</h1>
+        <p class="result-subtitle">${result.subtitle}</p>
+        <div class="indices">
+          ${result.indices.map(([label, value]) => `<div class="index"><b>${value}</b><span>${label}</span></div>`).join("")}
+        </div>
+        ${mixedNote ? `<div class="report-card"><h3>混合倾向提示</h3><p>${mixedNote}</p></div>` : ""}
+        <div class="report-card"><h3>核心诊断</h3><p>${result.diagnosis}</p></div>
+        <div class="report-card"><h3>你真正想逃离的是什么</h3><p>${result.escape}</p></div>
+        <div class="report-card"><h3>你真正想靠近的是什么</h3><p>${result.toward}</p></div>
+        <div class="report-card">
+          <h3>三种选择的收益与代价</h3>
+          <div class="compare">
+            ${result.compare.map(([title, text]) => `<div class="compare-item"><b>${title}</b><p>${text}</p></div>`).join("")}
+          </div>
+        </div>
+        <div class="report-card"><h3>你最容易误判的地方</h3><p>${result.misread}</p></div>
+        <div class="report-card">
+          <h3>30 天验证计划</h3>
+          <ul>${result.plan30.map(item => `<li>${item}</li>`).join("")}</ul>
+        </div>
+        <div class="report-card"><h3>90 天行动建议</h3><p>${result.plan90}</p></div>
+        <div class="report-card">
+          <h3>心理学参考框架</h3>
+          <p>本测试结构参考了自我决定理论、人-环境匹配、资源保存理论、社会比较理论、趋避冲突和生活设计思路。它们共同提醒我们：重大生活选择不只和地点有关，也和自主感、胜任感、关系支持、资源消耗和比较压力有关。</p>
+        </div>
+        <div class="share-box">
+          <b>可截图分享</b>
+          <p>${result.share}</p>
+        </div>
+        <div style="display:grid;gap:12px;margin-top:18px">
+          <button class="primary-btn" id="retake">重新测试</button>
+          <button class="ghost-btn" id="home">回到首页</button>
+        </div>
+        <p class="fineprint">${disclaimer}</p>
+      `);
+      document.getElementById("retake").addEventListener("click", () => {
+        state = { screen: "quiz", index: 0, answers: [], loadingIndex: 0 };
+        renderQuiz();
+      });
+      document.getElementById("home").addEventListener("click", renderLanding);
+    }
+
+    renderLanding();
+  </script>
+</body>
+</html>
